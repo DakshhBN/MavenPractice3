@@ -3,20 +3,34 @@ pipeline {
 
     tools {
         maven 'maven'
+        jdk 'jdk11'
     }
 
     stages {
 
-        stage('Build & Test') {
+        stage('Verify Environment') {
             steps {
-                sh 'mvn clean install'
+                sh 'java -version'
+                sh 'mvn -version'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
             }
         }
     }
 
     post {
         always {
-            junit 'target/surefire-reports/*.xml'
+            junit '**/target/surefire-reports/*.xml'
         }
         success {
             echo 'Selenium Tests Passed!'
