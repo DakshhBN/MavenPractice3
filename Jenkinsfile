@@ -9,7 +9,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/adithyaS360/seconprojprac.git'
+                git branch: 'main', url: 'https://github.com/DakshhBN/MavenPractice3.git'
             }
         }
 
