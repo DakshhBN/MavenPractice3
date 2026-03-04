@@ -2,12 +2,16 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven'   // Name must match Jenkins Global Tool Configuration
+        maven 'maven'   // Must match the Maven name in Jenkins Global Tool Configuration
+    }
+
+    environment {
+        HEADLESS = 'true'
     }
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/DakshhBN/MavenPractice3.git'
             }
@@ -19,31 +23,27 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Run Selenium Tests') {
             steps {
-                sh 'mvn test'
+                sh 'mvn test -Dheadless=${HEADLESS}'
             }
         }
 
-        stage('Package') {
+        stage('Package Application') {
             steps {
                 sh 'mvn package'
             }
         }
 
-        stage('Run Application') {
-            steps {
-                sh 'mvn exec:java -Dexec.mainClass="com.example.App"'
-            }
-        }
     }
 
     post {
+      
         success {
-            echo 'Build and deployment successful!'
+            echo 'Build and Selenium tests passed!'
         }
         failure {
-            echo 'Build failed!'
+            echo 'Build or tests failed!'
         }
     }
 }
